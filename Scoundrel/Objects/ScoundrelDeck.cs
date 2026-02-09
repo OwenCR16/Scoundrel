@@ -2,6 +2,10 @@ namespace Scoundrel
 {
     public class ScoundrelDeck : Deck
     {
+        public ScoundrelDeck()
+        {
+            DeckList = CreateScoundrelDeckList();
+        }
         public List<Card> CreateScoundrelDeckList()
         {
             List<Card> deckList = [];

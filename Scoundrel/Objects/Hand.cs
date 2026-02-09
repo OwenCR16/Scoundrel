@@ -7,7 +7,8 @@ namespace Scoundrel
         public bool HandContainsAce { get; set; } = false;
         public void DrawCards(List<Card> deckList, int drawAmount)
         {
-            List<Card> selected = deckList.Where((item, index) => index < drawAmount).ToList();
+            int tempDrawAmount = deckList.Count < drawAmount ? deckList.Count : drawAmount;
+            List<Card> selected = deckList.Where((item, index) => index < tempDrawAmount).ToList();
             foreach (Card card in selected)
             {
                 HandList.Add(new Card(card.CardRank, card.CardSuit));

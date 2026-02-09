@@ -1,7 +1,7 @@
 namespace Scoundrel
 {
-    public class Weapon
+    public class ScoundrelWeapon
     {
-        
+
     }
 }
