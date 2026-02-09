@@ -1,0 +1,14 @@
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\bin\Debug\net9.0\Scoundrel.exe
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\bin\Debug\net9.0\Scoundrel.deps.json
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\bin\Debug\net9.0\Scoundrel.runtimeconfig.json
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\bin\Debug\net9.0\Scoundrel.dll
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\bin\Debug\net9.0\Scoundrel.pdb
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.AssemblyInfoInputs.cache
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.AssemblyInfo.cs
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.csproj.CoreCompileInputs.cache
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.dll
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\refint\Scoundrel.dll
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.pdb
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.genruntimeconfig.cache
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\ref\Scoundrel.dll
