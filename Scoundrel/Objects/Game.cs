@@ -15,6 +15,7 @@ namespace Scoundrel
                 {
                     case 0://win - open shop, then make the game harder and increase level
                     case 1://lose - open shop, then restart level
+                        break;
                 }
             }
         }
@@ -26,20 +27,113 @@ namespace Scoundrel
             ActiveDeck.ShuffleDeck();
             while (true)
             {
-                if (ActiveDeck.DeckList.Count == 0)
+                if (ActiveDeck.DeckList.Count == 0 && ActivePlayer.PlayerHealth.HealthValue > 0)
                     //return OnWin();
                 NewRound();
-                ActivePlayer.PlayerHand.DisplayHand();
+                //display round number
+                while(true)
+                {
+                    //REPEAT UNTIL ONE CARD LEFT IN HAND, OR 0 CARDS LEFT IN HAND IF THE DECK IS EMPTY
+                    ActivePlayer.PlayerHand.DisplayHand();
+                    //display health total
+                    //(display buffs/etc)
+
+                    ScoundrelAction();
+                    //select a card
+                    //if the card is a diamond, EquipNewWeaponFromHand
+                    //if the card is a heart, DrinkHealthPotion
+                    //if the card is a club or spade, FightEnemy (choice between Face or Weapon)
+                }
                 
+
                 //return OnLose(); 
             }
-            
-            
         }
         public void NewRound()
         {
             ActivePlayer.PlayerHand.DrawToHandSize(ActiveDeck.DeckList);
+            //other roguelike stuff may occur here
         }
+        public void ScoundrelAction()
+        {
+            //ask user for choice
+            int userChoiceIndex = 0;
+            //may need to make a copy in the future
+            switch (ActivePlayer.PlayerHand.HandList[userChoiceIndex].CardSuit)
+            {
+                case Suit.Diamonds:
+                    EquipNewWeaponFromHand(userChoiceIndex);
+                    //other roguelike things
+                    //display text
+                    break;
+                case Suit.Hearts:
+                    DrinkHealthPotionFromHand(userChoiceIndex);
+                    //other roguelike things
+                    //display text
+                    break;
+                case Suit.Clubs:
+                case Suit.Spades:
+                    FightEnemy(userChoiceIndex, FightChoice());
+                    //other roguelike things
+                    //display text
+                    break;
+            }
+        }
+        public bool FightChoice()
+        {
+            if (ActivePlayer.PlayerWeapon == null)
+                return false;
+            //ask player
+            if (/*player chooses weapon*/)
+                return true;
+            return false;
+        }
+        public void FightEnemy(int selectedCardIndex, bool withWeaponTrue, int armourValue = 0, int weaponValueModifier = 0)
+        {
+            int weaponValue = withWeaponTrue && (ActivePlayer.PlayerWeapon != null) ? ActivePlayer.PlayerWeapon.WeaponCard.CardValue : 0;
+
+            weaponValue += weaponValueModifier;
+
+            int damage = (armourValue + weaponValue) > ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardValue ? 0 : ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardValue - armourValue - weaponValue;
+
+            ActivePlayer.PlayerHealth.ChangeHealth(-damage);
+            ActivePlayer.PlayerHand.DiscardCards([selectedCardIndex], ActiveDeck.DiscardList);
+        }
+        
+        public void DrinkHealthPotionFromHand(int selectedCardIndex)
+        {
+            ActivePlayer.PlayerHealth.ChangeHealth(ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardValue);
+
+            ActivePlayer.PlayerHand.DiscardCards([selectedCardIndex], ActiveDeck.DiscardList);
+        }
+
+        public void EquipNewWeaponFromHand(int selectedCardIndex)
+        {
+            DiscardCurrentWeapon();
+
+            ActivePlayer.PlayerWeapon = new ScoundrelWeapon(new Card(ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardRank, ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardSuit));
+
+            ActivePlayer.PlayerHand.HandList.RemoveAt(selectedCardIndex);
+        }
+        public void DiscardCurrentWeapon()
+        {
+            if (ActivePlayer.PlayerWeapon == null)
+                return;
+
+            List<Card> tempList =
+            [
+                new Card(ActivePlayer.PlayerWeapon.WeaponCard.CardRank, ActivePlayer.PlayerWeapon.WeaponCard.CardSuit)
+            ];
+
+            foreach (Card card in ActivePlayer.PlayerWeapon.EnemyCache)
+            {
+                tempList.Add(new Card(card.CardRank, card.CardSuit));
+            }
+
+            ActiveDeck.DiscardList.AddRange(tempList);
+            ActivePlayer.PlayerWeapon = null;
+        }
+
         public int OnWin()
         {
             Console.WriteLine("You Won!\n");
