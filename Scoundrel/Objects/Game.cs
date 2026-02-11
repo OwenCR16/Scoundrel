@@ -83,10 +83,24 @@ namespace Scoundrel
         {
             if (ActivePlayer.PlayerWeapon == null)
                 return false;
-            //ask player
-            if (/*player chooses weapon*/)
-                return true;
-            return false;
+            while(true)
+            {
+                Console.WriteLine("Fight with weapon (1) or face (2)?");
+                string? response = Console.ReadLine();
+                if (!string.IsNullOrEmpty(response))
+                {
+                    switch (response.ToLower().Trim())
+                    {
+                        case "1":
+                            return true;
+                        case "2":
+                            return false;
+                        default:
+                            break;
+                    }
+                }
+                Console.WriteLine("invalid input");
+            }
         }
         public void FightEnemy(int selectedCardIndex, bool withWeaponTrue, int armourValue = 0, int weaponValueModifier = 0)
         {

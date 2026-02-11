@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Scoundrel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df299d477ed5eb619592d38bcf7cef131f420ecd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df38155cd056480fdc67948351e9021e4e94d7e7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Scoundrel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Scoundrel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
