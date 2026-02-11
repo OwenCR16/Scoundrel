@@ -36,14 +36,14 @@ namespace Scoundrel
                 {
                     //REPEAT UNTIL ONE CARD LEFT IN HAND, OR 0 CARDS LEFT IN HAND IF THE DECK IS EMPTY
                     ScoundrelAction();
-                    
+
                 }
                 //return OnLose(); 
             }
         }
         public void NewRound()
         {
-            RoundCount ++;
+            RoundCount++;
             Console.WriteLine($"Round {RoundCount}.");
             ActivePlayer.PlayerHand.DrawToHandSize(ActiveDeck.DeckList);
             //other roguelike stuff may occur here
@@ -53,43 +53,48 @@ namespace Scoundrel
             while (true)
             {
                 string? response = RequestScoundrelAction();
-                
+
                 if (CheckRun(response))
                 {
                     Run();
                     return;
                 }
-                    
+
                 if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int userChoiceIndex))
                 {
                     userChoiceIndex -= 1;
                     if (userChoiceIndex < 0 || userChoiceIndex > ActivePlayer.PlayerHand.HandList.Count - 1)
                     {
-                        switch (ActivePlayer.PlayerHand.HandList[userChoiceIndex].CardSuit)
-                        {
-                            case Suit.Diamonds:
-                                EquipNewWeaponFromHand(userChoiceIndex);
-                                return;
-                            case Suit.Hearts:
-                                DrinkHealthPotionFromHand(userChoiceIndex);
-                                return;
-                            case Suit.Clubs:
-                            case Suit.Spades:
-                                FightEnemy(userChoiceIndex, FightChoice());
-                                return;
-                            default:
-                                break;
-                        }
+                        if (AttemptAction(userChoiceIndex))
+                            return;
                     }
                 }
                 Console.WriteLine("--------  invalid input  --------");
+            }
+        }
+        public bool AttemptAction(int userChoiceIndex)
+        {
+            switch (ActivePlayer.PlayerHand.HandList[userChoiceIndex].CardSuit)
+            {
+                case Suit.Diamonds:
+                    EquipNewWeaponFromHand(userChoiceIndex);
+                    return true;
+                case Suit.Hearts:
+                    DrinkHealthPotionFromHand(userChoiceIndex);
+                    return true;
+                case Suit.Clubs:
+                case Suit.Spades:
+                    FightEnemy(userChoiceIndex, FightChoice());
+                    return true;
+                default:
+                    return false;
             }
         }
         public string? RequestScoundrelAction()
         {
             ActivePlayer.DisplayPlayerProperties();
             Console.WriteLine("Please choose your action for the turn by selecting a card from your hand (for console app, type the position of the card e.g. 1,2,3,4...)");
-            if(!RanPreviousRound)
+            if (!RanPreviousRound)
                 Console.WriteLine("Otherwise, run from this round by typing \"r\".");
             return Console.ReadLine();
         }
