@@ -1,10 +1,12 @@
 namespace Scoundrel
 {
     //https://bicyclecards.com/how-to-play/blackjack
-    public class Game
+    public class ScoundrelGame
     {
         public Player ActivePlayer { get; set; } = new Player();
         public ScoundrelDeck ActiveDeck { get; set; } = new ScoundrelDeck();
+        public int RoundCount { get; set; } = 0;
+        public bool RanPreviousRound { get; set; } = false;
         public void PerformMatch()
         {
             Console.WriteLine("Welcome To BlackJack! Pays 2 to 1 (in Bananas), no max.\nDealer stands on 17 and above.\n\n");
@@ -19,8 +21,8 @@ namespace Scoundrel
                 }
             }
         }
-                //string? response = Console.ReadLine();
-                //if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int responseInt))
+        //string? response = Console.ReadLine();
+        //if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int responseInt))
         public int PerformGame()
         {
             ResetGame();
@@ -28,62 +30,86 @@ namespace Scoundrel
             while (true)
             {
                 if (ActiveDeck.DeckList.Count == 0 && ActivePlayer.PlayerHealth.HealthValue > 0)
-                    //return OnWin();
+                    return OnWin();
                 NewRound();
-                //display round number
-                while(true)
+                while (true)
                 {
                     //REPEAT UNTIL ONE CARD LEFT IN HAND, OR 0 CARDS LEFT IN HAND IF THE DECK IS EMPTY
-                    ActivePlayer.PlayerHand.DisplayHand();
-                    //display health total
-                    //(display buffs/etc)
-
                     ScoundrelAction();
-                    //select a card
-                    //if the card is a diamond, EquipNewWeaponFromHand
-                    //if the card is a heart, DrinkHealthPotion
-                    //if the card is a club or spade, FightEnemy (choice between Face or Weapon)
+                    
                 }
-                
-
                 //return OnLose(); 
             }
         }
         public void NewRound()
         {
+            RoundCount ++;
+            Console.WriteLine($"Round {RoundCount}.");
             ActivePlayer.PlayerHand.DrawToHandSize(ActiveDeck.DeckList);
             //other roguelike stuff may occur here
         }
         public void ScoundrelAction()
         {
-            //ask user for choice
-            int userChoiceIndex = 0;
-            //may need to make a copy in the future
-            switch (ActivePlayer.PlayerHand.HandList[userChoiceIndex].CardSuit)
+            while (true)
             {
-                case Suit.Diamonds:
-                    EquipNewWeaponFromHand(userChoiceIndex);
-                    //other roguelike things
-                    //display text
-                    break;
-                case Suit.Hearts:
-                    DrinkHealthPotionFromHand(userChoiceIndex);
-                    //other roguelike things
-                    //display text
-                    break;
-                case Suit.Clubs:
-                case Suit.Spades:
-                    FightEnemy(userChoiceIndex, FightChoice());
-                    //other roguelike things
-                    //display text
-                    break;
+                string? response = RequestScoundrelAction();
+                
+                if (CheckRun(response))
+                {
+                    Run();
+                    return;
+                }
+                    
+                if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int userChoiceIndex))
+                {
+                    userChoiceIndex -= 1;
+                    if (userChoiceIndex < 0 || userChoiceIndex > ActivePlayer.PlayerHand.HandList.Count - 1)
+                    {
+                        switch (ActivePlayer.PlayerHand.HandList[userChoiceIndex].CardSuit)
+                        {
+                            case Suit.Diamonds:
+                                EquipNewWeaponFromHand(userChoiceIndex);
+                                return;
+                            case Suit.Hearts:
+                                DrinkHealthPotionFromHand(userChoiceIndex);
+                                return;
+                            case Suit.Clubs:
+                            case Suit.Spades:
+                                FightEnemy(userChoiceIndex, FightChoice());
+                                return;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                Console.WriteLine("--------  invalid input  --------");
             }
+        }
+        public string? RequestScoundrelAction()
+        {
+            ActivePlayer.DisplayPlayerProperties();
+            Console.WriteLine("Please choose your action for the turn by selecting a card from your hand (for console app, type the position of the card e.g. 1,2,3,4...)");
+            if(!RanPreviousRound)
+                Console.WriteLine("Otherwise, run from this round by typing \"r\".");
+            return Console.ReadLine();
+        }
+        public bool CheckRun(string? response)
+        {
+            if (response == "r" && !RanPreviousRound)
+                return true;
+            return false;
+        }
+        public void Run()
+        {
+            //get player to decide order of cards in hand
+            //put newly ordered cards on the bottom of the deck
+            RanPreviousRound = true;
         }
         public bool FightChoice()
         {
             if (ActivePlayer.PlayerWeapon == null)
                 return false;
-            while(true)
+            while (true)
             {
                 Console.WriteLine("Fight with weapon (1) or face (2)?");
                 string? response = Console.ReadLine();
@@ -112,13 +138,15 @@ namespace Scoundrel
 
             ActivePlayer.PlayerHealth.ChangeHealth(-damage);
             ActivePlayer.PlayerHand.DiscardCards([selectedCardIndex], ActiveDeck.DiscardList);
+            RanPreviousRound = false;
         }
-        
+
         public void DrinkHealthPotionFromHand(int selectedCardIndex)
         {
             ActivePlayer.PlayerHealth.ChangeHealth(ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardValue);
 
             ActivePlayer.PlayerHand.DiscardCards([selectedCardIndex], ActiveDeck.DiscardList);
+            RanPreviousRound = false;
         }
 
         public void EquipNewWeaponFromHand(int selectedCardIndex)
@@ -128,6 +156,7 @@ namespace Scoundrel
             ActivePlayer.PlayerWeapon = new ScoundrelWeapon(new Card(ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardRank, ActivePlayer.PlayerHand.HandList[selectedCardIndex].CardSuit));
 
             ActivePlayer.PlayerHand.HandList.RemoveAt(selectedCardIndex);
+            RanPreviousRound = false;
         }
         public void DiscardCurrentWeapon()
         {
