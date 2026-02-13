@@ -30,13 +30,15 @@ namespace Scoundrel
                 if (ActiveDeck.DeckList.Count == 0 && ActivePlayer.PlayerHealth.HealthValue > 0)
                     return OnWin();
                 NewRound();
-                while (true)
+                bool roundOver = false;
+                while (!roundOver)
                 {
-                    //REPEAT UNTIL ONE CARD LEFT IN HAND, OR 0 CARDS LEFT IN HAND IF THE DECK IS EMPTY
                     ScoundrelAction();
-
+                    if (ActivePlayer.PlayerHealth.HealthValue <= 0)
+                        return OnLose();
+                    if (ActivePlayer.PlayerHand.HandList.Count <= 1)
+                        roundOver = true;
                 }
-                //return OnLose(); 
             }
         }
         public void NewRound()
@@ -221,6 +223,8 @@ namespace Scoundrel
         {
             ActivePlayer.PlayerHand = new ScoundrelHand();
             ActiveDeck = new ScoundrelDeck();
+            RoundCount = 0;
+            RanPreviousRound = false;
         }
     }
 }
