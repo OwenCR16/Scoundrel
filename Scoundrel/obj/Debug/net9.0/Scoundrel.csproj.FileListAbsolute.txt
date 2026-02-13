@@ -12,3 +12,4 @@ C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\n
 C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.pdb
 C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.genruntimeconfig.cache
 C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\ref\Scoundrel.dll
+C:\Users\Owen Russell\Desktop\ProjectDeckOfCards\Scoundrel\Scoundrel\obj\Debug\net9.0\Scoundrel.sourcelink.json

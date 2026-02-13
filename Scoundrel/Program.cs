@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            ScoundrelGame game = new ScoundrelGame();
             game.PerformMatch();
         }
     }

@@ -21,8 +21,6 @@ namespace Scoundrel
                 }
             }
         }
-        //string? response = Console.ReadLine();
-        //if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int responseInt))
         public int PerformGame()
         {
             ResetGame();
@@ -46,15 +44,17 @@ namespace Scoundrel
             RoundCount++;
             Console.WriteLine($"Round {RoundCount}.");
             ActivePlayer.PlayerHand.DrawToHandSize(ActiveDeck.DeckList);
+            //DISPLAY DECK SIZE
             //other roguelike stuff may occur here
         }
         public void ScoundrelAction()
         {
+            bool actionTakenThisRound = false;
             while (true)
             {
-                string? response = RequestScoundrelAction();
+                string? response = RequestScoundrelAction(actionTakenThisRound);
 
-                if (CheckRun(response))
+                if (CheckRun(response, actionTakenThisRound))
                 {
                     Run();
                     return;
@@ -63,10 +63,13 @@ namespace Scoundrel
                 if (!string.IsNullOrEmpty(response) && int.TryParse(response, out int userChoiceIndex))
                 {
                     userChoiceIndex -= 1;
-                    if (userChoiceIndex < 0 || userChoiceIndex > ActivePlayer.PlayerHand.HandList.Count - 1)
+                    if (userChoiceIndex > 0 || userChoiceIndex <= ActivePlayer.PlayerHand.HandList.Count - 1)
                     {
                         if (AttemptAction(userChoiceIndex))
+                        {
+                            actionTakenThisRound = true;
                             return;
+                        }
                     }
                 }
                 Console.WriteLine("--------  invalid input  --------");
@@ -90,24 +93,24 @@ namespace Scoundrel
                     return false;
             }
         }
-        public string? RequestScoundrelAction()
+        public string? RequestScoundrelAction(bool actionTakenThisRound)
         {
             ActivePlayer.DisplayPlayerProperties();
             Console.WriteLine("Please choose your action for the turn by selecting a card from your hand (for console app, type the position of the card e.g. 1,2,3,4...)");
-            if (!RanPreviousRound)
+            if (!RanPreviousRound && !actionTakenThisRound)
                 Console.WriteLine("Otherwise, run from this round by typing \"r\".");
             return Console.ReadLine();
         }
-        public bool CheckRun(string? response)
+        public bool CheckRun(string? response, bool actionTakenThisRound)
         {
-            if (response == "r" && !RanPreviousRound)
+            if (response == "r" && !RanPreviousRound && !actionTakenThisRound)
                 return true;
             return false;
         }
         public void Run()
         {
-            //get player to decide order of cards in hand
-            //put newly ordered cards on the bottom of the deck
+            //in actual blazor app, player can decide order to put cards back on the bottom. let player drag cards around somehow?? at least elavate them slightly to show they are about to be put in deck, then have left/right buttons below the cards as a starting point?
+            ActivePlayer.PlayerHand.HandToDeck(ActiveDeck.DeckList, true);
             RanPreviousRound = true;
         }
         public bool FightChoice()
